@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   # root "articles#index"
 
   resources :users, only: %w[index show create update destroy]
+
+  post '/auth/login', to: 'authentication#login'
 end
