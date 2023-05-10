@@ -7,8 +7,7 @@ RSpec.describe 'users', type: :request do
       produces 'application/json'
 
       response '200', 'Ok' do
-        schema type: :array,
-          items: :object,
+        schema type: :object,
           properties: {
             id: { type: :integer },
             name: { type: :string }
@@ -34,7 +33,7 @@ RSpec.describe 'users', type: :request do
         let(:user) { { name: 'John' } }
         run_test! do |response|
           data = JSON.parse(response.body)
-          expect(data['name']).to eq 'John'
+          expect(data.dig('data', 'attributes', 'name')).to eq 'John'
         end
       end
 
@@ -85,7 +84,7 @@ RSpec.describe 'users', type: :request do
         let(:user) { { name: 'Thanos' } }
         run_test! do |response|
           data = JSON.parse(response.body)
-          expect(data['name']).to eq 'Thanos'
+          expect(data.dig('data', 'attributes', 'name')).to eq 'Thanos'
         end
       end
 
