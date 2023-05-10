@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
 
-  resources :users, only: %w[index show create update destroy]
+  resources :users, only: %w[index show create update destroy] do
+    post 'follow', on: :member
+  end
 
   post '/auth/login', to: 'authentication#login'
 end

@@ -127,4 +127,35 @@ RSpec.describe 'users', type: :request do
       end
     end
   end
+
+  path '/users/{id}/follow' do
+    parameter name: :id, in: :path, type: :string
+    parameter name: 'Authorization', in: :header, type: :string
+
+    # UsersController#follow
+    post 'Follow a user' do
+      consumes 'application/json'
+      produces 'application/json'
+
+      response '201', 'Created' do
+        let(:id) { FactoryBot.create(:user).id }
+        let(:current_user) { FactoryBot.create(:user) }
+        let('Authorization') { generate_auth_token(current_user) }
+        run_test!
+      end
+
+      response '422', 'Unprocessable Entity' do
+        let(:user) { FactoryBot.create(:user) }
+        let(:id) { user.id }
+        let(:current_user) { FactoryBot.create(:user) }
+        let('Authorization') { generate_auth_token(current_user) }
+
+        before do
+          user.user_followers.create(follower: current_user)
+        end
+
+        run_test!
+      end
+    end
+  end
 end

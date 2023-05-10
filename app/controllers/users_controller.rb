@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authorize_request, except: :create
-  before_action :set_user, only: %w[show update destroy]
+  before_action :set_user, only: %w[show update destroy follow]
 
   def index
     @users = User.all
@@ -31,6 +31,16 @@ class UsersController < ApplicationController
   def destroy
     @user.destroy
     render nothing: true, status: :no_content
+  end
+
+  def follow
+    @user_follower = @user.user_followers.new(follower_id: @current_user.id)
+
+    if @user_follower.save
+      render json: serialize(@user), status: :created
+    else
+      render json: { error: @user_follower.errors.full_messages.to_sentence }, status: :unprocessable_entity
+    end
   end
 
   private
