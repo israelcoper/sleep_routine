@@ -4,6 +4,7 @@ RSpec.describe User, type: :model do
   describe 'associations' do
     it { should have_many(:user_followers) }
     it { should have_many(:followers) }
+    it { should have_many(:sleep_routines) }
   end
 
   describe 'validations' do

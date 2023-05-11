@@ -3,6 +3,7 @@ class User < ApplicationRecord
 
   has_many :user_followers
   has_many :followers, through: :user_followers, class_name: "User"
+  has_many :sleep_routines, dependent: :destroy
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
