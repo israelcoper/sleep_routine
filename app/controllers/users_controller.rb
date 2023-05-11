@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authorize_request, except: :create
-  before_action :set_user, only: %w[show update destroy follow unfollow]
+  before_action :set_user, only: %w[show update destroy follow unfollow friends_sleeps]
 
   def index
     @users = User.page(page_number).per(page_size)
@@ -53,6 +53,12 @@ class UsersController < ApplicationController
     else
       render json: { error: 'Not Found' }, status: :not_found
     end
+  end
+
+  def friends_sleeps
+    @sleep_routines = SleepRoutine.records_from_previous_week(@user.followers.ids, page_number, page_size)
+
+    render json: serialize(@sleep_routines), status: :ok
   end
 
   private

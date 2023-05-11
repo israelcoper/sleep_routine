@@ -188,4 +188,48 @@ RSpec.describe 'users', type: :request do
       end
     end
   end
+
+  path '/users/{id}/friends_sleeps' do
+    parameter name: :id, in: :path, type: :string, description: 'User id'
+    parameter name: 'Authorization', in: :header, type: :string
+
+    # UsersController#friends_sleeps
+    get 'List a user friends sleep records' do
+      produces 'application/json'
+
+      response '200', 'Ok' do
+        schema type: :object,
+          properties: {
+            id: { type: :integer },
+            user_id: { type: :integer },
+            start_at: { type: :string },
+            end_at: { type: :string },
+            duration_in_seconds: { type: :string },
+            created_at: { type: :string },
+            updated_at: { type: :string }
+          }
+
+        let(:current_user) { FactoryBot.create(:user) }
+        let('Authorization') { generate_auth_token(current_user) }
+        let(:id) { current_user.id }
+
+        let(:follower_1) { FactoryBot.create(:user) }
+        let(:follower_2) { FactoryBot.create(:user) }
+
+        let!(:user_follower_1) { FactoryBot.create(:user_follower, user: current_user, follower: follower_1) }
+        let!(:user_follower_2) { FactoryBot.create(:user_follower, user: current_user, follower: follower_2) }
+
+        let!(:sleep_routine_0) { FactoryBot.create(:sleep_routine, user: follower_1, start_at: 3.days.ago, end_at: 3.days.ago + 5.hours) }
+        let!(:sleep_routine_1) { FactoryBot.create(:sleep_routine, user: follower_2, start_at: 2.days.ago, end_at: 2.days.ago + 4.hours) }
+        let!(:sleep_routine_2) { FactoryBot.create(:sleep_routine, user: follower_2, start_at: 1.day.ago, end_at: 1.days.ago + 6.hours) }
+        let!(:sleep_routine_3) { FactoryBot.create(:sleep_routine, user: follower_1, start_at: DateTime.now, end_at: DateTime.now + 4.hours) }
+        let!(:sleep_routine_4) { FactoryBot.create(:sleep_routine, user: follower_1, start_at: 8.days.ago, end_at: 8.days.ago + 4.hours) }
+
+        run_test! do |example|
+          data = JSON.parse response.body
+          expect(data.dig('meta', 'total_count')).to eq 4
+        end
+      end
+    end
+  end
 end

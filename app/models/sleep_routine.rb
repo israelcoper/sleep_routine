@@ -8,6 +8,16 @@ class SleepRoutine < ApplicationRecord
 
   before_validation :set_duration_in_seconds, unless: -> { end_at.nil? }
 
+  scope :records_from_previous_week, -> (followers_ids, page_number = nil, page_size = nil) do
+    self
+      .where.not(duration_in_seconds: nil)
+      .where(user_id: followers_ids)
+      .where("start_at BETWEEN ? AND ?", 7.days.ago, Time.now)
+      .order("duration_in_seconds DESC")
+      .page(page_number)
+      .per(page_size)
+  end
+
   private
 
   def set_duration_in_seconds

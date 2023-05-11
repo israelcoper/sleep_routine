@@ -10,6 +10,8 @@ Rails.application.routes.draw do
     member do
       post 'follow'
       post 'unfollow'
+
+      get 'friends_sleeps'
     end
 
     resources :sleep_routines, only: %w[index create update]
