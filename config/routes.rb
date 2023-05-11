@@ -7,7 +7,10 @@ Rails.application.routes.draw do
   # root "articles#index"
 
   resources :users, only: %w[index show create update destroy] do
-    post 'follow', on: :member
+    member do
+      post 'follow'
+      post 'unfollow'
+    end
   end
 
   post '/auth/login', to: 'authentication#login'

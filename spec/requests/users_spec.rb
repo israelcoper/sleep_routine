@@ -134,7 +134,6 @@ RSpec.describe 'users', type: :request do
 
     # UsersController#follow
     post 'Follow a user' do
-      consumes 'application/json'
       produces 'application/json'
 
       response '201', 'Created' do
@@ -153,6 +152,37 @@ RSpec.describe 'users', type: :request do
         before do
           user.user_followers.create(follower: current_user)
         end
+
+        run_test!
+      end
+    end
+  end
+
+  path '/users/{id}/unfollow' do
+    parameter name: :id, in: :path, type: :string
+    parameter name: 'Authorization', in: :header, type: :string
+
+    # UsersController#unfollow
+    post 'Unfollow a user' do
+      produces 'application/json'
+
+      response '200', 'Ok' do
+        let(:user) { FactoryBot.create(:user) }
+        let(:id) { user.id }
+        let(:current_user) { FactoryBot.create(:user) }
+        let('Authorization') { generate_auth_token(current_user) }
+
+        before do
+          user.user_followers.create(follower: current_user)
+        end
+
+        run_test!
+      end
+
+      response '404', 'Not found' do
+        let(:id) { FactoryBot.create(:user).id }
+        let(:current_user) { FactoryBot.create(:user) }
+        let('Authorization') { generate_auth_token(current_user) }
 
         run_test!
       end

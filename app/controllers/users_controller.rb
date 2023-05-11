@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authorize_request, except: :create
-  before_action :set_user, only: %w[show update destroy follow]
+  before_action :set_user, only: %w[show update destroy follow unfollow]
 
   def index
     @users = User.all
@@ -40,6 +40,18 @@ class UsersController < ApplicationController
       render json: serialize(@user), status: :created
     else
       render json: { error: @user_follower.errors.full_messages.to_sentence }, status: :unprocessable_entity
+    end
+  end
+
+  def unfollow
+    @follower = @user.followers.find_by(id: @current_user.id)
+
+    if @follower.present?
+      @user.followers.delete(@follower)
+
+      render json: serialize(@user), status: :ok
+    else
+      render json: { error: 'Not Found' }, status: :not_found
     end
   end
 
