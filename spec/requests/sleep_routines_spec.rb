@@ -32,6 +32,14 @@ RSpec.describe 'sleep_routines', type: :request do
 
         run_test!
       end
+
+      response '401', 'Unauthorized' do
+        let(:user_id) { FactoryBot.create(:user).id }
+        let(:current_user) { FactoryBot.create(:user) }
+        let('Authorization') { generate_auth_token(current_user) }
+
+        run_test!
+      end
     end
 
     # SleepRoutinesController#create
@@ -42,6 +50,14 @@ RSpec.describe 'sleep_routines', type: :request do
         let(:current_user) { FactoryBot.create(:user) }
         let('Authorization') { generate_auth_token(current_user) }
         let(:user_id) { current_user.id }
+
+        run_test!
+      end
+
+      response '401', 'Unauthorized' do
+        let(:user_id) { FactoryBot.create(:user).id }
+        let(:current_user) { FactoryBot.create(:user) }
+        let('Authorization') { generate_auth_token(current_user) }
 
         run_test!
       end
@@ -62,6 +78,16 @@ RSpec.describe 'sleep_routines', type: :request do
         let('Authorization') { generate_auth_token(current_user) }
         let(:user_id) { current_user.id }
         let(:id) { FactoryBot.create(:sleep_routine, user: current_user, start_at: DateTime.now, end_at: nil).id }
+
+        run_test!
+      end
+
+      response '401', 'Unauthorized' do
+        let(:user) { FactoryBot.create(:user) }
+        let(:user_id) { user.id }
+        let(:current_user) { FactoryBot.create(:user) }
+        let('Authorization') { generate_auth_token(current_user) }
+        let(:id) { FactoryBot.create(:sleep_routine, user: user, start_at: DateTime.now, end_at: nil).id }
 
         run_test!
       end

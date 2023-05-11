@@ -3,12 +3,16 @@ class SleepRoutinesController < ApplicationController
   before_action :set_user
 
   def index
+    authorize @user, :sleep_routine?
+
     @sleep_routines = @user.sleep_routines.order("created_at DESC").page(page_number).per(page_size)
 
     render json: serialize(@sleep_routines)
   end
 
   def create
+    authorize @user, :sleep_routine?
+
     @sleep_routine = @user.sleep_routines.build(start_at: DateTime.now)
 
     if @sleep_routine.save
@@ -19,6 +23,8 @@ class SleepRoutinesController < ApplicationController
   end
 
   def update
+    authorize @user, :sleep_routine?
+
     @sleep_routine = @user.sleep_routines.find(params[:id])
 
     if @sleep_routine.update(end_at: DateTime.now)
@@ -31,6 +37,6 @@ class SleepRoutinesController < ApplicationController
   private
 
   def set_user
-    @user ||= User.find(@current_user.id)
+    @user ||= User.find(params[:user_id])
   end
 end

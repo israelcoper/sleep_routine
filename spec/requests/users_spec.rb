@@ -98,8 +98,8 @@ RSpec.describe 'users', type: :request do
       }
 
       response '200', 'Ok' do
-        let(:id) { FactoryBot.create(:user).id }
         let(:current_user) { FactoryBot.create(:user) }
+        let(:id) { current_user.id }
         let('Authorization') { generate_auth_token(current_user) }
         let(:user) { { name: 'Thanos' } }
         run_test! do |response|
@@ -109,6 +109,14 @@ RSpec.describe 'users', type: :request do
       end
 
       response '422', 'Unprocessable Entity' do
+        let(:current_user) { FactoryBot.create(:user) }
+        let(:id) { current_user.id }
+        let('Authorization') { generate_auth_token(current_user) }
+        let(:user) { { name: nil } }
+        run_test!
+      end
+
+      response '401', 'Unauthorized' do
         let(:id) { FactoryBot.create(:user).id }
         let(:current_user) { FactoryBot.create(:user) }
         let('Authorization') { generate_auth_token(current_user) }
@@ -120,6 +128,13 @@ RSpec.describe 'users', type: :request do
     # UsersController#destroy
     delete 'Delete a user' do
       response '204', 'No Content' do
+        let(:current_user) { FactoryBot.create(:user) }
+        let(:id) { current_user.id }
+        let('Authorization') { generate_auth_token(current_user) }
+        run_test!
+      end
+
+      response '401', 'Unauthorized' do
         let(:id) { FactoryBot.create(:user).id }
         let(:current_user) { FactoryBot.create(:user) }
         let('Authorization') { generate_auth_token(current_user) }
@@ -229,6 +244,13 @@ RSpec.describe 'users', type: :request do
           data = JSON.parse response.body
           expect(data.dig('meta', 'total_count')).to eq 4
         end
+      end
+
+      response '401', 'Unauthorized' do
+        let(:id) { FactoryBot.create(:user).id }
+        let(:current_user) { FactoryBot.create(:user) }
+        let('Authorization') { generate_auth_token(current_user) }
+        run_test!
       end
     end
   end

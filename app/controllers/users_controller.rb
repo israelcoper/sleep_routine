@@ -21,6 +21,8 @@ class UsersController < ApplicationController
   end
 
   def update
+    authorize @user
+
     if @user.update(user_params)
       render json: serialize(@user), status: :ok
     else
@@ -29,12 +31,14 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    authorize @user
+
     @user.destroy
     render nothing: true, status: :no_content
   end
 
   def follow
-    @user_follower = @user.user_followers.new(follower_id: @current_user.id)
+    @user_follower = @user.user_followers.new(follower_id: current_user.id)
 
     if @user_follower.save
       render json: serialize(@user), status: :created
@@ -44,7 +48,7 @@ class UsersController < ApplicationController
   end
 
   def unfollow
-    @follower = @user.followers.find_by(id: @current_user.id)
+    @follower = @user.followers.find_by(id: current_user.id)
 
     if @follower.present?
       @user.followers.delete(@follower)
@@ -56,6 +60,8 @@ class UsersController < ApplicationController
   end
 
   def friends_sleeps
+    authorize @user
+
     @sleep_routines = SleepRoutine.records_from_previous_week(@user.followers.ids, page_number, page_size)
 
     render json: serialize(@sleep_routines), status: :ok

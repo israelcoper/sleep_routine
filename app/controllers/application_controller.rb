@@ -1,5 +1,12 @@
 class ApplicationController < ActionController::API
+  include Pundit::Authorization
+
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  def current_user
+    @current_user
+  end
 
   def serialize(resource)
     result = if resource.respond_to?(:all)
@@ -33,6 +40,10 @@ class ApplicationController < ActionController::API
 
   def not_found
     render json: { error: "Not Found" }, status: :not_found
+  end
+
+  def user_not_authorized
+    render json: { error: "Unauthorized" }, status: :unauthorized
   end
 
   def authorize_request
