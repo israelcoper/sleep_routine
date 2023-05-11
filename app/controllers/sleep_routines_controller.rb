@@ -3,7 +3,7 @@ class SleepRoutinesController < ApplicationController
   before_action :set_user
 
   def index
-    @sleep_routines = @user.sleep_routines.order("created_at DESC")
+    @sleep_routines = @user.sleep_routines.order("created_at DESC").page(page_number).per(page_size)
 
     render json: serialize(@sleep_routines)
   end

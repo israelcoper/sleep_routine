@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: %w[show update destroy follow unfollow]
 
   def index
-    @users = User.all
+    @users = User.page(page_number).per(page_size)
     render json: serialize(@users)
   end
 
