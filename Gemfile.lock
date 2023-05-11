@@ -191,6 +191,8 @@ GEM
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
     thor (1.2.1)
+    time_difference (0.5.0)
+      activesupport
     timeout (0.3.2)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -218,6 +220,7 @@ DEPENDENCIES
   rswag-specs
   rswag-ui
   shoulda-matchers (~> 5.0)
+  time_difference
   tzinfo-data
 
 RUBY VERSION
