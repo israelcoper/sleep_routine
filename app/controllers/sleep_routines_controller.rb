@@ -2,6 +2,12 @@ class SleepRoutinesController < ApplicationController
   before_action :authorize_request
   before_action :set_user
 
+  def index
+    @sleep_routines = @user.sleep_routines.order("created_at DESC")
+
+    render json: serialize(@sleep_routines)
+  end
+
   def create
     @sleep_routine = @user.sleep_routines.build(start_at: DateTime.now)
 
