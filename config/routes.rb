@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       post 'unfollow'
     end
 
-    resources :sleep_routines, only: %w[create]
+    resources :sleep_routines, only: %w[create update]
   end
 
   post '/auth/login', to: 'authentication#login'

@@ -12,6 +12,16 @@ class SleepRoutinesController < ApplicationController
     end
   end
 
+  def update
+    @sleep_routine = @user.sleep_routines.find(params[:id])
+
+    if @sleep_routine.update(end_at: DateTime.now)
+      render json: serialize(@sleep_routine), status: :ok
+    else
+      render json: { error: @sleep_routine.errors.full_messages.to_sentence }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_user

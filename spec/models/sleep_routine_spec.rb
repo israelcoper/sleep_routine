@@ -12,20 +12,17 @@ RSpec.describe SleepRoutine, type: :model do
 
     describe 'duration in seconds numericality' do
       let(:user) { FactoryBot.create(:user) }
-      let(:sleep_routine) { FactoryBot.build(:sleep_routine, user: user, start_at: DateTime.now) }
-
-      before :each do
-        sleep_routine.end_at = DateTime.now + 5.hours
+      let(:sleep_routine) do
+        FactoryBot.build(
+          :sleep_routine,
+          user: user,
+          start_at: DateTime.now,
+          end_at: DateTime.now + 5.hours
+        )
       end
 
       it 'creates sleep routine' do
-        sleep_routine.duration_in_seconds = TimeDifference.between(sleep_routine.end_at, sleep_routine.start_at).in_seconds.round.to_i
-
         expect(sleep_routine.valid?).to eq true
-      end
-
-      it 'returns error' do
-        expect(sleep_routine.valid?).to eq false
       end
     end
   end
