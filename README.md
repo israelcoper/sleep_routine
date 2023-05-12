@@ -1,24 +1,55 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Tech Stack
+* [Ruby](https://www.ruby-lang.org/en/documentation/)
+> Language
+> version: ruby 3.0.6p216
 
-Things you may want to cover:
+* [Ruby on Rails](https://rubyonrails.org/)
+> Framework
+> version: 7.0.4.3
 
-* Ruby version
+* [Postgres](https://www.postgresql.org/docs/)
+> Database
+> version: latest
 
-* System dependencies
+* [Rspec](https://github.com/rspec/rspec-rails)
+> Testing framework
 
-* Configuration
+* [Rswag](https://github.com/rswag/rswag)
+> API documentation
 
-* Database creation
+* [Bcrypt](https://github.com/bcrypt-ruby/bcrypt-ruby) and [JWT](https://github.com/bcrypt-ruby/bcrypt-ruby)
+> Authentication
 
-* Database initialization
+* [Pundit](https://github.com/varvet/pundit)
+> Authorization
 
-* How to run the test suite
+* [Kaminari](https://github.com/kaminari/kaminari)
+> Pagination
 
-* Services (job queues, cache servers, search engines, etc.)
+* [Docker](https://docs.docker.com/)
+> Container
 
-* Deployment instructions
+## How to run the application?
+```
+docker compose build
+docker compose up
+```
 
-* ...
+## How to setup database?
+> Go inside the container and run db migrate
+```
+docker exec -it sleep-routine-api bash
+rake db:migrate
+```
+
+## How to run the test suite
+```
+rspec spec
+```
+
+## How to generate documentation?
+```
+RAILS_ENV=test rails rswag
+```
