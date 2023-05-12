@@ -41,6 +41,7 @@ docker compose up
 > Go inside the container and run db migrate
 ```
 docker exec -it sleep-routine-api bash
+rake db:create
 rake db:migrate
 ```
 
